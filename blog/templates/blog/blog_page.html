@@ -19,6 +19,16 @@
         </div>
     {% endfor %}
 
+    
+    {% with tags=page.tags.all %}
+    {% if tags %}
+        <div class="tags">
+            <h3>Tags</h3>
+            {% for tag in tags %}
+                <a href="{% slugurl 'tags' %}?tag={{ tag }}"><button type="button">{{ tag }}</button></a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
     <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
-
 {% endblock %}
