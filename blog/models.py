@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
@@ -40,11 +42,27 @@ class BlogTagIndexPage(Page):
         return context
 
 
+class Profile(models.Model):
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        fullname = (self.first_name+self.last_name)
+        return fullname
+
+
+class ProfilePage(Page):
+    pass
+
+
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    author = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL,
+                               related_name='blogs')
 
     def main_image(self):
         gallery_item = self.gallery_images.first()
@@ -65,7 +83,9 @@ class BlogPage(Page):
         ], heading="Blog information"),
         FieldPanel('intro'),
         FieldPanel('body'),
+        FieldPanel('author'),
         InlinePanel('gallery_images', label="Gallery images"),
+
     ]
 
 
