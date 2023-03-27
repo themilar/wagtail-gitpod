@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% load static  %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'blog/styles.css' %}">
+{% endblock %}
 
 {% load wagtailcore_tags %}
 {% load wagtailcore_tags wagtailimages_tags %}
@@ -17,6 +21,7 @@
 {% with post.main_image as main_image %}
 {% if main_image %}
 {% image main_image fill-160x100 %}
+<p>By {{ post.author }}</p>
 {% endif %}
 {% endwith %}
 
