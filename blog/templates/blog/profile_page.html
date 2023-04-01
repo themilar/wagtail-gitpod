@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-profilepage{% endblock %}
+{% block content %}
+<h1>Hey there, I'm {{page.name}}</h1>
+<h3>Here are somethings you should know about me: {{page.bio}} </h3>
+{% endblock %}

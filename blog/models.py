@@ -43,17 +43,24 @@ class BlogTagIndexPage(Page):
 
 
 class Profile(models.Model):
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True, )
     bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        fullname = (self.first_name+self.last_name)
-        return fullname
+        return self.name
 
 
 class ProfilePage(Page):
-    pass
+    # profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=50, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    content_panels = Page.content_panels+[
+        FieldPanel('name'), FieldPanel('bio')
+    ]
+
+    def __str__(self):
+        return self.name
 
 
 class BlogPage(Page):
@@ -63,6 +70,11 @@ class BlogPage(Page):
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     author = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL,
                                related_name='blogs')
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context['author'] = ProfilePage.objects.get(name=self.author.name)
+        return context
 
     def main_image(self):
         gallery_item = self.gallery_images.first()
@@ -101,3 +113,5 @@ class BlogPageGalleryImage(Orderable):
         FieldPanel('image'),
         FieldPanel('caption'),
     ]
+
+# TODO: why did the inheritance (and even onetoone linking) not work for the profile and profilepage models

@@ -6,12 +6,12 @@
 
 {% block content %}
     <h1>{{ page.title }}</h1>
-    <p class="meta">{{ page.date }}, By {{page.author}}</p>
+    <p class="meta">{{ page.date }}, by <a href="{% pageurl author %}">{{page.author}}</a></p>
 
     <div class="intro">{{ page.intro }}</div>
 
     {{ page.body|richtext }}
-
+Pro
     {% for item in page.gallery_images.all %}
         <div style="float: left; margin: 10px">
             {% image item.image fill-320x240 %}
